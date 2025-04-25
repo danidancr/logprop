@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <title>Cadastrar</title>
+    <style>
+        .alert {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 4px;
+        }
+        .alert-error {
+            background-color: #ffebee;
+            color: #c62828;
+            border: 1px solid #ef9a9a;
+        }
+        .alert-success {
+            background-color: #e8f5e9;
+            color: #2e7d32;
+            border: 1px solid #a5d6a7;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="img">
+            <img src="{{ url_for('static', filename='imagem/cadastro_entrar.png') }}" alt="Ilustração do cadastro" class="imagem-responsiva">
+        </div>
+
+        <div class="form">
+            <form action="{{ url_for('cadastrar') }}" method="POST">
+                <div class="form_header">
+                    <div class="titulo">
+                        <h1>Criar Conta</h1>
+                    </div>
+
+                    <div class="Login">
+                        <a href="{{ url_for('entrar') }}" class="botao">Já tem Conta?</a>
+                    </div>
+
+                    <!-- Mensagens de flash -->
+                    {% with messages = get_flashed_messages(with_categories=true) %}
+                        {% if messages %}
+                            {% for category, message in messages %}
+                                <div class="alert alert-{{ category }}">
+                                    {{ message }}
+                                </div>
+                            {% endfor %}
+                        {% endif %}
+                    {% endwith %}
+
+                    <div class="inputs_group">
+                        <div class="input_box">
+                            <label for="nome">Nome</label>
+                            <input type="text" name="nome" id="nome" placeholder="Digite o seu nome completo" required> 
+                        </div>
+
+                        <div class="input_box">
+                            <label for="email">Email</label>
+                            <input type="email" name="email" id="email" placeholder="Digite o seu email" required> 
+                        </div>
+
+                        <div class="input_box">
+                            <label for="senha">Senha</label>
+                            <input type="password" name="senha" id="senha" placeholder="Digite sua senha (mínimo 6 caracteres)" required minlength="6"> 
+                        </div>
+
+                        <div class="input_box">
+                            <label for="confirm_senha">Confirmar Senha</label>
+                            <input type="password" name="confirm_senha" id="confirm_senha" placeholder="Confirme sua senha" required minlength="6"> 
+                        </div>
+                    </div>
+                </div>
+
+                <div class="btn_cadastrar">
+                    <button type="submit" class="botao">Cadastrar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+</html>
