@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Relatório | +LogProp</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <header>
+        <!-- O mesmo header da home.html -->
+    </header>
+
+    <main class="pagina-relatorio">
+        <section class="topo-relatorio">
+            <div class="interface">
+                <h1 class="titulo-pagina">Meu Relatório</h1>
+                <p class="subtitulo">Acompanhe seu desempenho e progresso nos estudos</p>
+            </div>
+        </section>
+
+        <section class="conteudo-relatorio">
+            <div class="interface">
+                <div class="filtros-relatorio">
+                    <div class="filtro">
+                        <label for="periodo">Período:</label>
+                        <select id="periodo">
+                            <option value="7">Últimos 7 dias</option>
+                            <option value="30" selected>Últimos 30 dias</option>
+                            <option value="90">Últimos 3 meses</option>
+                            <option value="365">Último ano</option>
+                            <option value="0">Todo o período</option>
+                        </select>
+                    </div>
+                    
+                    <div class="filtro">
+                        <label for="assunto">Assunto:</label>
+                        <select id="assunto">
+                            <option value="todos" selected>Todos os assuntos</option>
+                            <option value="1">Proposições e Conectivos</option>
+                            <option value="2">Tabelas-verdade</option>
+                            <!-- Outros assuntos -->
+                        </select>
+                    </div>
+                    
+                    <button class="botao-gerar">Gerar Relatório</button>
+                </div>
+                
+                <div class="graficos-relatorio">
+                    <div class="grafico-container">
+                        <h2>Desempenho por Assunto</h2>
+                        <div class="grafico-barras">
+                            <!-- Este gráfico seria gerado com JavaScript/Chart.js -->
+                            <canvas id="grafico-assuntos"></canvas>
+                        </div>
+                    </div>
+                    
+                    <div class="grafico-container">
+                        <h2>Evolução do Aprendizado</h2>
+                        <div class="grafico-linhas">
+                            <!-- Este gráfico seria gerado com JavaScript/Chart.js -->
+                            <canvas id="grafico-evolucao"></canvas>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="tabela-questoes">
+                    <h2>Últimas Questões Respondidas</h2>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Data</th>
+                                <th>Assunto</th>
+                                <th>Questão</th>
+                                <th>Resultado</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>10/05/2023</td>
+                                <td>Proposições</td>
+                                <td>Identifique a proposição</td>
+                                <td><span class="correto">Correto</span></td>
+                            </tr>
+                            <tr>
+                                <td>09/05/2023</td>
+                                <td>Tabelas-verdade</td>
+                                <td>Construa a tabela para p ∧ q</td>
+                                <td><span class="incorreto">Incorreto</span></td>
+                            </tr>
+                            <!-- Mais linhas -->
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div class="botoes-relatorio">
+                    <a href="#" class="botao-exportar"><i class="fas fa-file-export"></i> Exportar Relatório</a>
+                    <a href="home.html" class="botao-voltar"><i class="fas fa-arrow-left"></i> Voltar</a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Inclua Chart.js para os gráficos -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="scripts.js"></script>
+</body>
+</html>
