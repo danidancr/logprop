@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <title>Exercícios - {{ assunto }}</title>
+  <style>
+    body {
+      background: #1094E0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+      color: #fff;
+      padding: 20px;
+      box-sizing: border-box;
+    }
+
+    #container {
+      background: white;
+      color: #333;
+      border-radius: 15px;
+      padding: 2rem;
+      width: 90%;
+      max-width: 600px;
+      box-shadow: 0 0 20px rgba(0,0,0,0.25);
+    }
+
+    h2 {
+      margin-bottom: 1.5rem;
+      text-transform: capitalize;
+      font-weight: 700;
+      font-size: 1.8rem;
+      color: #1094E0;
+      text-align: center;
+    }
+
+    #pergunta {
+      font-size: 1.3rem;
+      font-weight: 600;
+      margin-bottom: 2rem;
+      text-align: center;
+      line-height: 1.5;
+    }
+
+    .respostas-container {
+      display: grid;
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .resposta-btn {
+      background: #f0f4f8;
+      border: none;
+      border-radius: 12px;
+      padding: 1rem;
+      width: 100%;
+      font-size: 1.1rem;
+      cursor: pointer;
+      font-weight: 600;
+      color: #333;
+      transition: all 0.3s;
+      text-align: left;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+
+    .resposta-btn:hover:not(:disabled) {
+      background: #dbe4ee;
+      transform: translateY(-2px);
+    }
+
+    .resposta-btn.correto {
+      background: #77dd77;
+      color: white;
+      box-shadow: 0 0 15px rgba(30, 200, 0, 0.5);
+    }
+
+    .resposta-btn.errado {
+      background: #ff6961;
+      color: white;
+      box-shadow: 0 0 15px rgba(255, 51, 51, 0.5);
+    }
+
+    #feedback-individual {
+      margin: 1.5rem 0;
+      font-weight: 700;
+      font-size: 1.2rem;
+      text-align: center;
+      min-height: 2rem;
+    }
+
+    .feedback-correto {
+      color: #77dd77;
+    }
+
+    .feedback-errado {
+      color: #ff6961;
+    }
+
+    #explicacao {
+      background: #f8f9fa;
+      padding: 1.5rem;
+      border-radius: 10px;
+      margin: 1.5rem 0;
+      font-size: 1.1rem;
+      line-height: 1.6;
+      border-left: 4px solid #77dd77;
+    }
+
+    #controles {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 2rem;
+    }
+
+    .controle-btn {
+      background: #1094E0;
+      border: none;
+      border-radius: 8px;
+      padding: 0.8rem 1.5rem;
+      color: white;
+      font-size: 1rem;
+      cursor: pointer;
+      font-weight: 600;
+      transition: background 0.3s;
+    }
+
+    .controle-btn:hover {
+      background: #075687;
+    }
+
+    .controle-btn:disabled {
+      background: #cccccc;
+      cursor: not-allowed;
+    }
+
+    #contador-questoes {
+      text-align: center;
+      margin: 1rem 0;
+      font-weight: 600;
+      color: #666;
+    }
+  </style>
+</head>
+<body>
+  <div id="container">
+    <h2>{{ assunto }}</h2>
+
+    <div style="margin-bottom: 1rem;">
+      <div style="background: #e0e0e0; border-radius: 10px; overflow: hidden;">
+        <div id="barra-progresso" style="height: 20px; width: 0%; background: #1094E0; transition: width 0.3s;"></div>
+      </div>
+      <div id="contador-questoes">
+        Questão <span id="questao-atual">1</span> de {{ questoes|length }}
+      </div>
+    </div>
+
+    <div id="quiz-area">
+      <div id="pergunta"></div>
+      <div class="respostas-container" id="respostas"></div>
+      <div id="feedback-individual"></div>
+      <div id="explicacao"></div>
+
+      <div id="controles">
+        <button class="controle-btn" id="btn-anterior" disabled>Anterior</button>
+        <button class="controle-btn" id="btn-proximo" disabled>Próxima</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const questoes = {{ questoes|tojson }};
+    const assunto = "{{ assunto }}";
+    const usuario = "{{ usuario }}";
+
+    let questaoAtual = 0;
+    let respostasSelecionadas = Array(questoes.length).fill(null);
+    let startTime = new Date();
+
+    const perguntaEl = document.getElementById('pergunta');
+    const respostasEl = document.getElementById('respostas');
+    const feedbackEl = document.getElementById('feedback-individual');
+    const explicacaoEl = document.getElementById('explicacao');
+    const questaoAtualEl = document.getElementById('questao-atual');
+    const btnAnterior = document.getElementById('btn-anterior');
+    const btnProximo = document.getElementById('btn-proximo');
+    const barraProgresso = document.getElementById('barra-progresso');
+
+    mostrarQuestao(0);
+
+    function mostrarQuestao(indice) {
+      const q = questoes[indice];
+      questaoAtual = indice;
+
+      questaoAtualEl.textContent = indice + 1;
+      perguntaEl.textContent = q.pergunta;
+      respostasEl.innerHTML = '';
+
+      feedbackEl.textContent = '';
+      feedbackEl.className = 'feedback-individual';
+      explicacaoEl.textContent = '';
+      btnProximo.disabled = true;
+
+      q.respostas.forEach((resposta, i) => {
+        const btn = document.createElement('button');
+        btn.className = 'resposta-btn';
+        btn.textContent = resposta;
+
+        if (respostasSelecionadas[indice] !== null) {
+          btn.disabled = true;
+          if (i === q.correta) btn.classList.add('correto');
+          else if (i === respostasSelecionadas[indice]) btn.classList.add('errado');
+        }
+
+        btn.addEventListener('click', () => selecionarResposta(i, q.correta, q.explicacao));
+        respostasEl.appendChild(btn);
+      });
+
+      btnAnterior.disabled = indice === 0;
+      btnProximo.textContent = indice === questoes.length - 1 ? 'Finalizar' : 'Próxima';
+
+      atualizarBarraProgresso();
+    }
+
+    function selecionarResposta(indiceResposta, indiceCorreto, explicacao) {
+      respostasSelecionadas[questaoAtual] = indiceResposta;
+
+      const botoes = document.querySelectorAll('.resposta-btn');
+      botoes.forEach(btn => btn.disabled = true);
+
+      botoes[indiceCorreto].classList.add('correto');
+      if (indiceResposta !== indiceCorreto) {
+        botoes[indiceResposta].classList.add('errado');
+        feedbackEl.textContent = 'Resposta incorreta';
+        feedbackEl.className = 'feedback-individual feedback-errado';
+      } else {
+        feedbackEl.textContent = 'Resposta correta!';
+        feedbackEl.className = 'feedback-individual feedback-correto';
+      }
+
+      explicacaoEl.textContent = explicacao;
+      btnProximo.disabled = false;
+      atualizarBarraProgresso();
+    }
+
+    btnAnterior.addEventListener('click', () => {
+      if (questaoAtual > 0) mostrarQuestao(questaoAtual - 1);
+    });
+
+    btnProximo.addEventListener('click', () => {
+      if (questaoAtual < questoes.length - 1) {
+        mostrarQuestao(questaoAtual + 1);
+      } else {
+        finalizarQuiz();
+      }
+    });
+
+    function finalizarQuiz() {
+      const acertos = respostasSelecionadas.reduce((total, r, i) => total + (r === questoes[i].correta ? 1 : 0), 0);
+      const tempo = Math.floor((new Date() - startTime) / 1000);
+
+      fetch('/api/salvar_progresso', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ usuario, assunto, acertos, total: questoes.length, tempo })
+      })
+      .then(r => r.json())
+      .then(() => {
+        alert(`Quiz finalizado!\nVocê acertou ${acertos} de ${questoes.length} questões.\nTempo: ${formatarTempo(tempo)}`);
+        window.location.href = "/home";
+      })
+      .catch(() => {
+        alert('Quiz finalizado, mas houve erro ao salvar seu progresso.');
+      });
+    }
+
+    function formatarTempo(segundos) {
+      const m = Math.floor(segundos / 60);
+      const s = segundos % 60;
+      return `${m}m ${s}s`;
+    }
+
+    function atualizarBarraProgresso() {
+      const respondidas = respostasSelecionadas.filter(r => r !== null).length;
+      const progresso = Math.round((respondidas / questoes.length) * 100);
+      barraProgresso.style.width = progresso + '%';
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Relatório de Desempenho</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f2f2f2;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            background: white;
+            max-width: 800px;
+            margin: auto;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px #ccc;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        .estatisticas {
+            margin-bottom: 20px;
+        }
+        .estatisticas p {
+            font-size: 18px;
+            margin: 5px 0;
+        }
+        .barra-progresso {
+            background: #ddd;
+            border-radius: 20px;
+            overflow: hidden;
+            height: 25px;
+            margin-bottom: 10px;
+        }
+        .barra {
+            background: #4caf50;
+            height: 100%;
+            color: white;
+            text-align: center;
+            line-height: 25px;
+        }
+        .feedback {
+            font-weight: bold;
+            color: #2c3e50;
+            text-align: center;
+            margin-top: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 25px;
+        }
+        th, td {
+            border: 1px solid #aaa;
+            padding: 10px;
+            text-align: center;
+        }
+        th {
+            background: #eee;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Relatório de Desempenho</h1>
+
+        <div class="estatisticas">
+            <p><strong>Total de Questões:</strong> {{ total_questoes }}</p>
+            <p><strong>Acertos:</strong> {{ acertos }}</p>
+            <p><strong>Erros:</strong> {{ erros }}</p>
+            <p><strong>Tempo Médio:</strong> {{ tempo_medio }}</p>
+        </div>
+
+        <div class="barra-progresso">
+            <div class="barra" style="width: {{ progresso_geral }}%;">
+                {{ progresso_geral }}%
+            </div>
+        </div>
+
+        <div class="feedback">{{ feedback }}</div>
+
+        <h2>Desempenho por Assunto</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Assunto</th>
+                    <th>Acertos</th>
+                    <th>Erros</th>
+                    <th>% de Acertos</th>
+                    <th>Tempo Total (s)</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for assunto in por_assunto %}
+                    <tr>
+                        <td>{{ assunto.assunto }}</td>
+                        <td>{{ assunto.acertos }}</td>
+                        <td>{{ assunto.erros }}</td>
+                        <td>{{ assunto.percentual_acertos | round(1) }}%</td>
+                        <td>{{ assunto.tempo }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minha Conta</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Minha Conta</h1>
+        
+        <!-- Exibe mensagens flash -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="messages">
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ category }}">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+
+        <!-- Seção de informações do usuário -->
+        <div class="user-info">
+            <h2>Informações Pessoais</h2>
+            <p><strong>Nome:</strong> {{ user.name }}</p>
+            <p><strong>Email:</strong> {{ user.email }}</p>
+            <p><strong>Cadastrado em:</strong> {{ registro }}</p>
+        </div>
+
+        <!-- Seção de progresso -->
+        <div class="progress-section">
+            <h2>Meu Progresso</h2>
+            {% if progresso %}
+                {% for assunto, dados in progresso.items() %}
+                    <div class="progress-item">
+                        <h3>{{ assunto }}</h3>
+                        <p>Acertos: {{ dados.acertos }}</p>
+                        <p>Erros: {{ dados.erros }}</p>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <p>Nenhum progresso registrado ainda.</p>
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html>

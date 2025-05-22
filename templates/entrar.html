@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;900&family=Inter:wght@400;600&display=swap" rel="stylesheet" />
+</head>
+
+<body class="pg-cadastro">
+    <div class="container">
+        <div class="form-image">
+            <img src="{{ url_for('static', filename='imagem/cadastro_entrar.png') }}" alt="ilustração de Cadastro/login" class="imagem-responsiva" />
+        </div>
+
+        <div class="form">
+            <form method="POST" action="{{ url_for('entrar') }}">
+                <div class="form-header">
+                    <div class="titulo">
+                        <h1>Entrar</h1>
+                    </div>
+                </div>
+
+                {% if erro %}
+                <p style="color: red; text-align:center;">{{ erro }}</p>
+                {% endif %}
+
+                <div class="input-group">
+                    <div class="input-box">
+                        <label for="email">E-mail</label>
+                        <input id="email" type="email" name="email" placeholder="Digite seu e-mail" required />
+                    </div>
+
+                    <div class="input-box">
+                        <label for="password">Senha</label>
+                        <input id="password" type="password" name="password" placeholder="Digite sua senha" required />
+                    </div>
+                </div>
+
+                <div class="btn-cadastrar">
+                    <a href="{{ url_for('cadastrar') }}" class="botao link-cadastro">Ainda não tem conta?</a>
+                    <button type="submit" class="botao entrar">Entrar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+</html>
